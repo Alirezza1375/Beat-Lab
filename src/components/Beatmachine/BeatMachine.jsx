@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
-export default function BeatMachine({ playing, setPlaying, handleStopBeat }) {
+export default function BeatMachine() {
   console.log("re-render");
   const initialState = {
     kick: [
@@ -35,7 +35,12 @@ export default function BeatMachine({ playing, setPlaying, handleStopBeat }) {
     ],
   };
   const [beats, setBeats] = useState(initialState);
-
+  const playingRef = useRef(false);
+  const handleStopBeat = () => {
+    playingRef.current = false;
+  };
+  const [beatName, setBeatName] = useState("");
+  const [genre, setGenre] = useState("rock");
   const [bpm, setBpm] = useState(120);
 
   const toggleBeat = (instrument, row, col) => {
@@ -52,8 +57,8 @@ export default function BeatMachine({ playing, setPlaying, handleStopBeat }) {
   async function handleSubmitBeat() {
     // this an example to check
     const beatToSend = {
-      beat_name: "React Beat",
-      genre: "Rock",
+      beat_name: beatName,
+      genre: genre,
       beat_schema: beats,
       user_id: 1,
     };
@@ -78,11 +83,11 @@ export default function BeatMachine({ playing, setPlaying, handleStopBeat }) {
   };
 
   async function playInstrument(instrument, interval) {
-    let value = true;
-    while (value) {
+    while (playingRef.current) {
       for (let measure of beats[instrument]) {
         const sound = audioFiles[instrument];
         for (let note of measure) {
+          if (!playingRef.current) return;
           if (note) {
             sound.currentTime = 0;
             sound.play();
@@ -94,28 +99,18 @@ export default function BeatMachine({ playing, setPlaying, handleStopBeat }) {
           );
         }
       }
-      value = isPlaying();
     }
-  }
-
-  function isPlaying() {
-    console.log(playing, "playing");
-    if (playing) {
-      return true;
-    }
-    return false;
   }
 
   const handleBpmChange = (e) => {
     setBpm(e.target.value);
   };
 
-  // new: Play-function
   const playBeat = async () => {
     const bpmValue = bpm;
     const steps = 4;
     const interval = (60 * 1000) / bpmValue / steps;
-    setPlaying(true);
+    playingRef.current = true;
     for (const instrument in beats) {
       playInstrument(instrument, interval);
     }
@@ -127,8 +122,14 @@ export default function BeatMachine({ playing, setPlaying, handleStopBeat }) {
         <input
           placeholder="Beat Name"
           className="text-white placeholder-white"
+          value={beatName}
+          onChange={(e) => setBeatName(e.target.value)}
         />
-        <select className="text-white">
+        <select
+          value={genre}
+          onChange={(e) => setGenre(e.target.value)}
+          className="text-white"
+        >
           <option value="rock">Rock</option>
           <option value="pop">pop</option>
         </select>
@@ -181,7 +182,6 @@ export default function BeatMachine({ playing, setPlaying, handleStopBeat }) {
         <button className="text-white cursor-pointer" onClick={handleStopBeat}>
           Stop
         </button>
-        {playing && "playing"}
       </div>
     </div>
   );

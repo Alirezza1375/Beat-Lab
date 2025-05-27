@@ -6,22 +6,13 @@ import BeatMachine from "./components/Beatmachine/BeatMachine.jsx";
 import "./App.css";
 
 function App() {
-  const [playing, setPlaying] = useState(false);
-  const handleStopBeat = () => {
-    setPlaying(false);
-  };
-
   return (
     <Router>
       <div className="w-screen">
         <Navbar />
         <main className="p-[20px] text-center">
           <h1>Welcome to BeatLab</h1>
-          <BeatMachine
-            playing={playing}
-            setPlaying={setPlaying}
-            handleStopBeat={handleStopBeat}
-          />
+          <BeatMachine />
           <Routes>
             {/* Define the route for the signup form */}
             <Route path="/signup-form" element={<SignupForm />} />
