@@ -1,7 +1,8 @@
 import React, { useState, useRef } from "react";
+import { useParams } from "react-router-dom";
 
-export default function BeatMachine() {
-  console.log("re-render");
+export default function EditBeatMachine() {
+  console.log(useParams());
   const initialState = {
     kick: [
       [0, 0, 0, 0],
@@ -54,8 +55,8 @@ export default function BeatMachine() {
     });
   };
 
+  // also save the bpm
   async function handleSubmitBeat() {
-    // this an example to check
     const beatToSend = {
       beat_name: beatName,
       genre: genre,
@@ -70,7 +71,9 @@ export default function BeatMachine() {
         "Content-Type": "application/json",
       },
     });
-    console.log(res.ok);
+    if (res.ok) {
+      alert("Beat created successfully");
+    }
   }
 
   // new: Audio-data preparing
@@ -107,12 +110,14 @@ export default function BeatMachine() {
   };
 
   const playBeat = async () => {
-    const bpmValue = bpm;
-    const steps = 4;
-    const interval = (60 * 1000) / bpmValue / steps;
-    playingRef.current = true;
-    for (const instrument in beats) {
-      playInstrument(instrument, interval);
+    if (!playingRef.current) {
+      const bpmValue = bpm;
+      const steps = 4;
+      const interval = (60 * 1000) / bpmValue / steps;
+      playingRef.current = true;
+      for (const instrument in beats) {
+        playInstrument(instrument, interval);
+      }
     }
   };
 
@@ -148,11 +153,11 @@ export default function BeatMachine() {
         </button> */}
       </div>
       {Object.keys(beats).map((instrument) => (
-        <div key={instrument} className="space-y-2 w-full">
+        <div key={instrument} className="space-y-2">
           <h2 className="text-xl text-gray-300 font-bold capitalize">
             {instrument}
           </h2>
-          <div className="flex gap-8 w-full">
+          <div className="flex gap-8">
             {beats[instrument].map((row, rowIndex) => {
               return (
                 <div key={rowIndex} className="flex gap-2">
@@ -179,7 +184,10 @@ export default function BeatMachine() {
         <button className="text-white cursor-pointer" onClick={playBeat}>
           Play beat
         </button>
-        <button className="text-white cursor-pointer" onClick={handleStopBeat}>
+        <button
+          className="bg-red-400 text-white cursor-pointer"
+          onClick={handleStopBeat}
+        >
           Stop
         </button>
       </div>
