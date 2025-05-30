@@ -1,4 +1,6 @@
 import React, { useState, useRef } from "react";
+import { Link } from "react-router-dom";
+import Beats from "../Beats/Beats";
 
 export default function BeatMachine() {
   console.log("re-render");
@@ -55,13 +57,15 @@ export default function BeatMachine() {
   };
 
   async function handleSubmitBeat() {
-    // this an example to check
     const beatToSend = {
       beat_name: beatName,
       genre: genre,
       beat_schema: beats,
+      bpm: bpm,
       user_id: 1,
     };
+
+    console.log("submitting beat JSON:", beatToSend);
 
     const res = await fetch("http://127.0.0.1:5000/beats", {
       method: "POST",
@@ -70,7 +74,11 @@ export default function BeatMachine() {
         "Content-Type": "application/json",
       },
     });
-    console.log(res.ok);
+    if (res.ok) {
+      alert("Beat created successfully");
+    } else {
+      alert("Faild to creating new beat!");
+    }
   }
 
   // new: Audio-data preparing
@@ -112,6 +120,7 @@ export default function BeatMachine() {
     const interval = (60 * 1000) / bpmValue / steps;
     playingRef.current = true;
     for (const instrument in beats) {
+      console.log(instrument);
       playInstrument(instrument, interval);
     }
   };
@@ -172,7 +181,10 @@ export default function BeatMachine() {
         </div>
       ))}
       <div className="flex flex-row justify-center gap-6">
-        <button className="text-white" onClick={handleSubmitBeat}>
+        <button
+          className="text-white cursor-pointer"
+          onClick={handleSubmitBeat}
+        >
           Create beat
         </button>
         {/* new: Play Button */}
@@ -182,6 +194,9 @@ export default function BeatMachine() {
         <button className="text-white cursor-pointer" onClick={handleStopBeat}>
           Stop
         </button>
+        <Link className="text-white" to={"/beats"}>
+          All Beats
+        </Link>
       </div>
     </div>
   );

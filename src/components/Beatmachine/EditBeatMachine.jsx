@@ -1,8 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 export default function EditBeatMachine() {
-  console.log(useParams());
   const initialState = {
     kick: [
       [0, 0, 0, 0],
@@ -76,6 +75,21 @@ export default function EditBeatMachine() {
     }
   }
 
+  async function getSingleBeat(id) {
+    const res = await fetch(`http://127.0.0.1:5000/beats/${id}`);
+    const data = await res.json();
+    setBeatName(data.beat_name);
+    setBeats(data.beat_schema);
+    setBpm(data.bpm);
+    setGenre(data.genre);
+  }
+
+  const params = useParams();
+
+  useEffect(() => {
+    getSingleBeat(params.id);
+  }, []);
+
   // new: Audio-data preparing
   const audioFiles = {
     kick: new Audio("sounds/kick.wav"),
@@ -116,6 +130,7 @@ export default function EditBeatMachine() {
       const interval = (60 * 1000) / bpmValue / steps;
       playingRef.current = true;
       for (const instrument in beats) {
+        console.log(instrument);
         playInstrument(instrument, interval);
       }
     }

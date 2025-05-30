@@ -5,6 +5,7 @@ import SignupForm from "./components/SignUpForm.jsx";
 import BeatMachine from "./components/Beatmachine/BeatMachine.jsx";
 import "./App.css";
 import EditBeatMachine from "./components/Beatmachine/EditBeatMachine.jsx";
+import Beats from "./components/Beats/Beats.jsx";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/signup-form" element={<SignupForm />} />
             {/* You can add other routes here */}
             <Route path="/create-beat" element={<BeatMachine />} />
+            <Route path="/beats" element={<Beats />} />
             <Route path="/beat/edit/:id" element={<EditBeatMachine />} />
           </Routes>
         </main>
