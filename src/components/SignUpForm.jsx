@@ -1,21 +1,54 @@
 import React, { useState } from "react";
+import BeatMachine from "./Beatmachine/BeatMachine";
 
 function SignupForm() {
   const [name, setName] = useState("");
   const [familyName, setFamilyName] = useState("");
   const [email, setEmail] = useState("");
   const [level, setLevel] = useState("beginner");
+  const [res, setRes] = useState("");
 
-  const handleSubmit = (e) => {
+  async function handleRegisterUser(e) {
     e.preventDefault();
-    // Interaction with backend.
-    console.log({ name, familyName, email, level });
-  };
+
+    const userInfoToSend = {
+      name: name,
+      family_name: familyName,
+      email: email,
+      level: level,
+    };
+
+    const fullName = `${name} ${familyName}`;
+
+    try {
+      const response = await fetch("http://127.0.0.1:5000/register", {
+        method: "POST",
+        body: JSON.stringify(userInfoToSend),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setRes(`success:${fullName}`);
+      } else {
+        setRes(`error:${fullName}`);
+      }
+
+      setName("");
+      setFamilyName("");
+      setEmail("");
+      setLevel("beginner");
+    } catch (error) {
+      console.error("Registration failed:", error);
+      setRes(`error:${fullName}`);
+    }
+  }
 
   return (
     <div className="signup-form">
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
+      <h2 className="mb-2.5">Sign Up</h2>
+      <form onSubmit={handleRegisterUser}>
         <div>
           <label>Name:</label>
           <input
@@ -55,6 +88,22 @@ function SignupForm() {
             <option value="advanced">Advanced</option>
           </select>
         </div>
+        {res?.startsWith("success") && (
+          <div>
+            <h5 className="bg-green-500 text-black p-2 rounded">
+              {`${res.split(":")[1]} registered successfully.`}
+            </h5>
+            <span className="text-[12px]">Close this tab</span>
+          </div>
+        )}
+        {res?.startsWith("error") && (
+          <div>
+            <h5 className="bg-red-500 font-bold text-black p-2 rounded">
+              {`Faild to regiister ${res.split(":")[1]}.`}
+            </h5>
+            <span className="text-[12px]">Try again!</span>
+          </div>
+        )}
         <button type="submit">Submit</button>
       </form>
     </div>

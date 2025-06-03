@@ -10,33 +10,63 @@ function Navbar() {
       </div>
       <ul className="navbar-links">
         <li>
-          <a href="/" className="nav-link">
+          <a
+            href="/home"
+            rel="noopener noreferrer"
+            target="_blank"
+            className="nav-link"
+          >
             Home
           </a>
         </li>
         <li>
-          <a href="/courses" className="nav-link">
+          <a
+            href="/courses"
+            rel="noopener noreferrer"
+            target="_blank"
+            className="nav-link"
+          >
             Courses
           </a>
         </li>
         <li>
-          <a href="/blog" className="nav-link">
+          <a
+            href="/blog"
+            rel="noopener noreferrer"
+            target="_blank"
+            className="nav-link"
+          >
             Blog
           </a>
         </li>
         <li>
-          <a href="/about" className="nav-link">
+          <a
+            href="/about"
+            rel="noopener noreferrer"
+            target="_blank"
+            className="nav-link"
+          >
             About
           </a>
         </li>
         <li>
-          <a href="/contact" className="nav-link">
+          <a
+            href="/contact"
+            rel="noopener noreferrer"
+            target="_blank"
+            className="nav-link"
+          >
             Contact
           </a>
         </li>
       </ul>
       <div className="navbar-auth">
-        <a href="/login" className="auth-link">
+        <a
+          href="/login"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="auth-link"
+        >
           Login
         </a>
         <span className="auth-separator">/</span>

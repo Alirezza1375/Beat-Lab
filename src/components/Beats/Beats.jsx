@@ -30,7 +30,6 @@ export default function Beats({ allData }) {
           </Link>
         ))}
       </div>
-      <div></div>
     </div>
   );
 }

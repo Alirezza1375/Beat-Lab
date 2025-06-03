@@ -34,6 +34,7 @@ export default function EditBeatMachine() {
       [0, 0, 0, 0],
     ],
   };
+
   const [beats, setBeats] = useState(initialState);
   const playingRef = useRef(false);
   const handleStopBeat = () => {
@@ -72,6 +73,8 @@ export default function EditBeatMachine() {
     });
     if (res.ok) {
       alert("Beat created successfully");
+    } else {
+      alert("Failed to creating beat!");
     }
   }
 
@@ -130,7 +133,6 @@ export default function EditBeatMachine() {
       const interval = (60 * 1000) / bpmValue / steps;
       playingRef.current = true;
       for (const instrument in beats) {
-        console.log(instrument);
         playInstrument(instrument, interval);
       }
     }

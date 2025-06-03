@@ -115,18 +115,20 @@ export default function BeatMachine() {
   };
 
   const playBeat = async () => {
-    const bpmValue = bpm;
-    const steps = 4;
-    const interval = (60 * 1000) / bpmValue / steps;
-    playingRef.current = true;
-    for (const instrument in beats) {
-      console.log(instrument);
-      playInstrument(instrument, interval);
+    if (!playingRef.current) {
+      const bpmValue = bpm;
+      const steps = 4;
+      const interval = (60 * 1000) / bpmValue / steps;
+      playingRef.current = true;
+      for (const instrument in beats) {
+        console.log(instrument);
+        playInstrument(instrument, interval);
+      }
     }
   };
 
   return (
-    <div className="bg-[#242424] border border-red-500 p-4 space-y-4">
+    <div className="bg-[#242424] border border-red-500 p-4 space-y-4 w-[1000px]">
       <div className="flex flex-row justify-around">
         <input
           placeholder="Beat Name"
@@ -157,7 +159,7 @@ export default function BeatMachine() {
         </button> */}
       </div>
       {Object.keys(beats).map((instrument) => (
-        <div key={instrument} className="space-y-2 w-full">
+        <div key={instrument} className="space-y-2 w-full overflow-scroll">
           <h2 className="text-xl text-gray-300 font-bold capitalize">
             {instrument}
           </h2>
