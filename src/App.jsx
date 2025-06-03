@@ -20,6 +20,7 @@ function App() {
         <header>
           <Navbar />
           <Routes>
+            <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/courses" element={<Courses />} />
             <Route path="/blog" element={<Blog />} />
