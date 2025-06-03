@@ -10,12 +10,7 @@ function Navbar() {
       </div>
       <ul className="navbar-links">
         <li>
-          <a
-            href="/home"
-            rel="noopener noreferrer"
-            target="_blank"
-            className="nav-link"
-          >
+          <a href="/" rel="noopener noreferrer" className="nav-link">
             Home
           </a>
         </li>
