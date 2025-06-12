@@ -19,7 +19,6 @@ function SignupForm() {
     };
 
     const fullName = `${name} ${familyName}`;
-
     try {
       const response = await fetch("http://127.0.0.1:5000/register", {
         method: "POST",
@@ -90,7 +89,7 @@ function SignupForm() {
         </div>
         {res?.startsWith("success") && (
           <div>
-            <h5 className="bg-green-500 text-black p-2 rounded">
+            <h5 className=" text-black p-2 rounded">
               {`${res.split(":")[1]} registered successfully.`}
             </h5>
             <span className="text-[12px]">Close this tab</span>
@@ -98,8 +97,8 @@ function SignupForm() {
         )}
         {res?.startsWith("error") && (
           <div>
-            <h5 className="bg-red-500 font-bold text-black p-2 rounded">
-              {`Faild to regiister ${res.split(":")[1]}.`}
+            <h5 className="font-bold text-black p-2 rounded">
+              {`Faild to register ${res.split(":")[1]}.`}
             </h5>
             <span className="text-[12px]">Try again!</span>
           </div>

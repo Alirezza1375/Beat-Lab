@@ -10,11 +10,6 @@ function Navbar() {
       </div>
       <ul className="navbar-links">
         <li>
-          <a href="/" rel="noopener noreferrer" className="nav-link">
-            Home
-          </a>
-        </li>
-        <li>
           <a
             href="/courses"
             rel="noopener noreferrer"

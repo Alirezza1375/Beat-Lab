@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import Beats from "../Beats/Beats";
+import Beats from "../Beats";
 
 export default function BeatMachine() {
   console.log("re-render");
@@ -81,13 +81,13 @@ export default function BeatMachine() {
     }
   }
 
-  // new: Audio-data preparing
+  // audio-data preparing
   const audioFiles = {
     kick: new Audio("sounds/kick.wav"),
     snare: new Audio("sounds/snare.wav"),
-    "high-hat": new Audio("/sounds/zoom.wav"),
-    tom1: new Audio("/sounds/tom1.wav"),
-    tom2: new Audio("/sounds/tom2.wav"),
+    "high-hat": new Audio("sounds/CH.wav"),
+    "open-high-hat": new Audio("sounds/OH.wav"),
+    crash: new Audio("sounds/crash.wav"),
   };
 
   async function playInstrument(instrument, interval) {

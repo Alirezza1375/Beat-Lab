@@ -5,13 +5,13 @@ import SignupForm from "./components/SignUpForm.jsx";
 import BeatMachine from "./components/Beatmachine/BeatMachine.jsx";
 import "./App.css";
 import EditBeatMachine from "./components/Beatmachine/EditBeatMachine.jsx";
-import Beats from "./components/Beats/Beats.jsx";
+import Beats from "./components/Beats.jsx";
 import Home from "./components/Pages/Home/Home.jsx";
 import Courses from "./components/Pages/Courses/Courses.jsx";
 import Blog from "./components/Pages/Blog/Blog.jsx";
 import About from "./components/Pages/About/About.jsx";
 import Contact from "./components/Pages/Contact/Contact.jsx";
-import Footer from "./components/Footer/Footer.jsx";
+import Footer from "./components/Footer.jsx";
 
 function App() {
   return (
@@ -19,18 +19,15 @@ function App() {
       <div className="w-screen min-h-screen flex flex-col">
         <header>
           <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
         </header>
 
         <main className="p-[20px] text-center flex flex-col items-center flex-grow">
           <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/create-beat" element={<BeatMachine />} />
             <Route path="/beats" element={<Beats />} />
             <Route path="/beat/edit/:id" element={<EditBeatMachine />} />
