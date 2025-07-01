@@ -5,7 +5,7 @@ export default function ReadyToPlaySection() {
     <section className="bg-white py-16 px-4 text-center">
       <h2 className="text-3xl font-bold text-[#2a6496] mb-4">Ready to Play?</h2>
       <p className="text-gray-700 mb-6">
-        Join the Beat_Lab community and start learning today. Your drum journey
+        Join the Beat Lab community and start learning today. Your drum journey
         starts right here.
       </p>
       <a

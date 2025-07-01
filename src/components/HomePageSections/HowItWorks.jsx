@@ -4,7 +4,7 @@ export default function HowItWorksSection() {
   return (
     <section className="bg-white py-20 px-4">
       <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
-        How Beat_Lab Works
+        How Beat Lab Works
       </h2>
       <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto text-center">
         <div>

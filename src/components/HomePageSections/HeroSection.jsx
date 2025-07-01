@@ -25,7 +25,7 @@ export default function HeroSection() {
             Master the Drums, Step by Step.
           </h1>
           <p className="text-lg sm:text-xl mb-8 font-semibold">
-            From your first beat to advanced solos, Beat_Lab is your all-in-one
+            From your first beat to advanced solos, Beat Lab is your all-in-one
             space to learn, practice, and grow as a drummer.
           </p>
           <a

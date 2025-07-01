@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Beats from "../Beats";
+import Beats from "../Pages/Beats";
 
 export default function BeatMachine() {
   console.log("re-render");
@@ -41,9 +41,14 @@ export default function BeatMachine() {
   const handleStopBeat = () => {
     playingRef.current = false;
   };
+  const beatsRef = useRef(beats);
   const [beatName, setBeatName] = useState("");
   const [genre, setGenre] = useState("rock");
   const [bpm, setBpm] = useState(120);
+
+  useEffect(() => {
+    beatsRef.current = beats;
+  }, [beats]);
 
   const toggleBeat = (instrument, row, col) => {
     setBeats((prevBeats) => {
@@ -91,20 +96,40 @@ export default function BeatMachine() {
   };
 
   async function playInstrument(instrument, interval) {
+    const sound = audioFiles[instrument];
+    const measures = beatsRef.current[instrument];
+    const allCells = document.getElementsByClassName("cell");
+
     while (playingRef.current) {
-      for (let measure of beats[instrument]) {
-        const sound = audioFiles[instrument];
-        for (let note of measure) {
+      for (let i = 0; i < measures.length; i++) {
+        const measure = measures[i];
+
+        for (let j = 0; j < measure.length; j++) {
           if (!playingRef.current) return;
-          if (note) {
+
+          const noteNumber = i * 4 + j;
+
+          // Clear previous highlights
+          for (let cell of allCells) {
+            cell.classList.remove("border-white");
+          }
+
+          // Highlight current note
+          const highlightedCells = document.getElementsByClassName(
+            `cell-${noteNumber}`
+          );
+          for (let cell of highlightedCells) {
+            cell.classList.add("border-white");
+          }
+
+          // Play sound if note is active
+          if (measure[j]) {
             sound.currentTime = 0;
             sound.play();
           }
-          await new Promise((resolve) =>
-            setTimeout(() => {
-              resolve();
-            }, interval)
-          );
+
+          // Wait for the interval
+          await new Promise((resolve) => setTimeout(resolve, interval));
         }
       }
     }
@@ -170,7 +195,9 @@ export default function BeatMachine() {
                   {row.map((beat, colIndex) => (
                     <button
                       key={`${instrument}-${rowIndex}-${colIndex}`}
-                      className={`w-12 h-12 border-2 rounded-lg bg ${
+                      className={`cell-${
+                        rowIndex * 4 + colIndex
+                      } cell w-12 h-12 border-2 rounded-lg bg ${
                         beat == 1 ? "bg-blue-500" : "bg-red-300"
                       }`}
                       onClick={() => toggleBeat(instrument, rowIndex, colIndex)}

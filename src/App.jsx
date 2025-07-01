@@ -5,12 +5,12 @@ import SignupForm from "./components/SignUpForm.jsx";
 import BeatMachine from "./components/Beatmachine/BeatMachine.jsx";
 import "./App.css";
 import EditBeatMachine from "./components/Beatmachine/EditBeatMachine.jsx";
-import Beats from "./components/Beats.jsx";
-import Home from "./components/Pages/Home/Home.jsx";
-import Courses from "./components/Pages/Courses/Courses.jsx";
-import Blog from "./components/Pages/Blog/Blog.jsx";
-import About from "./components/Pages/About/About.jsx";
-import Contact from "./components/Pages/Contact/Contact.jsx";
+import Beats from "./components/Pages/Beats.jsx";
+import Home from "./components/Pages/Home.jsx";
+import Courses from "./components/Pages/Courses.jsx";
+import Blog from "./components/Pages/Blog.jsx";
+import About from "./components/Pages/About.jsx";
+import Contact from "./components/Pages/Contact.jsx";
 import Footer from "./components/Footer.jsx";
 
 function App() {
