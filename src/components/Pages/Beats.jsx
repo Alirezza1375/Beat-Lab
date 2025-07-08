@@ -44,8 +44,10 @@ export default function Beats() {
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-6">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold text-[#2a6496] mb-10">Your Beats</h1>
-
+        <h1 className="text-3xl font-bold text-[#2a6496] mb-5">Your Beats</h1>
+        <p className="mb-[20px] text-[#2a6496]">
+          Edit your beats by clicking on them!
+        </p>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {allBeats.map((item) => (
             <div

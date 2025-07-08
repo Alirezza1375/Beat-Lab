@@ -81,6 +81,7 @@ export default function BeatMachine() {
     });
     if (res.ok) {
       alert("Beat created successfully");
+      setBeats(initialState);
     } else {
       alert("Faild to creating new beat!");
     }
@@ -165,7 +166,9 @@ export default function BeatMachine() {
           className="text-white"
         >
           <option value="rock">Rock</option>
-          <option value="pop">pop</option>
+          <option value="pop">Pop</option>
+          <option value="funck">Funck</option>
+          <option value="hipHop">Hip-Hop</option>
         </select>
         <input
           type="number"
@@ -209,19 +212,28 @@ export default function BeatMachine() {
       ))}
       <div className="flex flex-row justify-center gap-6">
         <button
-          className="text-white cursor-pointer"
+          className="text-white cursor-pointer hover:font-bold"
           onClick={handleSubmitBeat}
         >
           Create beat
         </button>
         {/* new: Play Button */}
-        <button className="text-white cursor-pointer" onClick={playBeat}>
+        <button
+          className="text-white cursor-pointer hover:font-bold"
+          onClick={playBeat}
+        >
           Play beat
         </button>
-        <button className="text-white cursor-pointer" onClick={handleStopBeat}>
+        <button
+          className="text-white cursor-pointer hover:font-bold"
+          onClick={handleStopBeat}
+        >
           Stop
         </button>
-        <Link className="text-white" to={"/beats"}>
+        <Link
+          className="text-white hover:font-bold cursor-pointer"
+          to={"/beats"}
+        >
           All Beats
         </Link>
       </div>

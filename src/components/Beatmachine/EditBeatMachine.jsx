@@ -61,7 +61,7 @@ export default function EditBeatMachine({ beat, editable = true }) {
   };
 
   // handle edit beat
-  async function handleSubmitBeat() {
+  async function handleEditBeat() {
     const beatToSend = {
       beat_name: beatName,
       genre: genre,
@@ -111,6 +111,8 @@ export default function EditBeatMachine({ beat, editable = true }) {
     snare: new Audio("sounds/snare.wav"),
     "high-hat": new Audio("sounds/CH.wav"),
   };
+
+  console.log("up until here, works!");
 
   async function playInstrument(instrument, interval) {
     const sound = audioFiles[instrument];
@@ -241,16 +243,22 @@ export default function EditBeatMachine({ beat, editable = true }) {
       ))}
       <div className="flex flex-row justify-center gap-6">
         {editable ? (
-          <button className="text-white" onClick={handleSubmitBeat}>
+          <button
+            className="text-white cursor-pointer hover:font-bold"
+            onClick={handleEditBeat}
+          >
             Edit beat
           </button>
         ) : null}
         {/* new: Play Button */}
-        <button className="text-white cursor-pointer" onClick={playBeat}>
+        <button
+          className="text-white cursor-pointer hover:font-bold"
+          onClick={playBeat}
+        >
           Play beat
         </button>
         <button
-          className="bg-red-400 text-white cursor-pointer"
+          className="bg-red-400 text-white cursor-pointer hover:font-bold"
           onClick={handleStopBeat}
         >
           Stop
