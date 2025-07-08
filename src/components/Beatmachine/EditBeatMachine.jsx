@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-export default function EditBeatMachine() {
+export default function EditBeatMachine({ beat, editable = true }) {
   const initialState = {
     kick: [
       [0, 0, 0, 0],
@@ -35,14 +35,19 @@ export default function EditBeatMachine() {
     ],
   };
 
-  const [beats, setBeats] = useState(initialState);
+  const [beats, setBeats] = useState(beat ? beat.beat_schema : initialState);
   const playingRef = useRef(false);
   const handleStopBeat = () => {
     playingRef.current = false;
   };
-  const [beatName, setBeatName] = useState("");
-  const [genre, setGenre] = useState("rock");
-  const [bpm, setBpm] = useState(120);
+  const beatsRef = useRef(beats);
+  const [beatName, setBeatName] = useState(beat ? beat.beat_name : "");
+  const [genre, setGenre] = useState(beat ? beat.genre : "Rock");
+  const [bpm, setBpm] = useState(beat ? beat.bpm : 120);
+
+  useEffect(() => {
+    beatsRef.current = beats;
+  }, [beats]);
 
   const toggleBeat = (instrument, row, col) => {
     setBeats((prevBeats) => {
@@ -55,7 +60,7 @@ export default function EditBeatMachine() {
     });
   };
 
-  // also save the bpm
+  // handle edit beat
   async function handleSubmitBeat() {
     const beatToSend = {
       beat_name: beatName,
@@ -82,7 +87,14 @@ export default function EditBeatMachine() {
     const res = await fetch(`http://127.0.0.1:5000/beats/${id}`);
     const data = await res.json();
     setBeatName(data.beat_name);
-    setBeats(data.beat_schema);
+    setBeats((prevSchema) => {
+      prevSchema.kick = data.beat_schema.kick;
+      prevSchema.snare = data.beat_schema.snare;
+      prevSchema["high-hat"] = data.beat_schema["high-hat"];
+      prevSchema.tom1 = data.beat_schema.tom1;
+      prevSchema.tom2 = data.beat_schema.tom2;
+      return prevSchema;
+    });
     setBpm(data.bpm);
     setGenre(data.genre);
   }
@@ -90,33 +102,51 @@ export default function EditBeatMachine() {
   const params = useParams();
 
   useEffect(() => {
-    getSingleBeat(params.id);
+    beat ? () => {} : getSingleBeat(params.id);
   }, []);
 
   // new: Audio-data preparing
   const audioFiles = {
     kick: new Audio("sounds/kick.wav"),
     snare: new Audio("sounds/snare.wav"),
-    "high-hat": new Audio("/sounds/zoom.wav"),
-    tom1: new Audio("/sounds/tom1.wav"),
-    tom2: new Audio("/sounds/tom2.wav"),
+    "high-hat": new Audio("sounds/CH.wav"),
   };
 
   async function playInstrument(instrument, interval) {
+    const sound = audioFiles[instrument];
+    const measures = beatsRef.current[instrument];
+    const allCells = document.getElementsByClassName("cell");
+
     while (playingRef.current) {
-      for (let measure of beats[instrument]) {
-        const sound = audioFiles[instrument];
-        for (let note of measure) {
+      for (let i = 0; i < measures.length; i++) {
+        const measure = measures[i];
+
+        for (let j = 0; j < measure.length; j++) {
           if (!playingRef.current) return;
-          if (note) {
+
+          const noteNumber = i * 4 + j;
+
+          // Clear previous highlights
+          for (let cell of allCells) {
+            cell.classList.remove("border-white");
+          }
+
+          // Highlight current note
+          const highlightedCells = document.getElementsByClassName(
+            `cell-${noteNumber}`
+          );
+          for (let cell of highlightedCells) {
+            cell.classList.add("border-white");
+          }
+
+          // Play sound if note is active
+          if (measure[j]) {
             sound.currentTime = 0;
             sound.play();
           }
-          await new Promise((resolve) =>
-            setTimeout(() => {
-              resolve();
-            }, interval)
-          );
+
+          // Wait for the interval
+          await new Promise((resolve) => setTimeout(resolve, interval));
         }
       }
     }
@@ -141,30 +171,42 @@ export default function EditBeatMachine() {
   return (
     <div className="bg-[#242424] border border-red-500 p-4 space-y-4">
       <div className="flex flex-row justify-around">
-        <input
-          placeholder="Beat Name"
-          className="text-white placeholder-white"
-          value={beatName}
-          onChange={(e) => setBeatName(e.target.value)}
-        />
-        <select
-          value={genre}
-          onChange={(e) => setGenre(e.target.value)}
-          className="text-white"
-        >
-          <option value="rock">Rock</option>
-          <option value="pop">pop</option>
-        </select>
-        <input
-          type="number"
-          max={240}
-          min={40}
-          name="bpmSelector"
-          placeholder="select bpm..."
-          className="placeholder-white text-white"
-          value={bpm}
-          onChange={handleBpmChange}
-        />
+        {editable ? (
+          <input
+            placeholder="Beat Name"
+            className="text-white placeholder-white"
+            value={beatName}
+            onChange={(e) => setBeatName(e.target.value)}
+          />
+        ) : (
+          <p>{beatName}</p>
+        )}
+        {editable ? (
+          <select
+            value={genre}
+            onChange={(e) => setGenre(e.target.value)}
+            className="text-white"
+          >
+            <option value="rock">Rock</option>
+            <option value="pop">pop</option>
+          </select>
+        ) : (
+          <p>{genre}</p>
+        )}
+        {editable ? (
+          <input
+            type="number"
+            max={240}
+            min={40}
+            name="bpmSelector"
+            placeholder="select bpm..."
+            className="placeholder-white text-white"
+            value={bpm}
+            onChange={handleBpmChange}
+          />
+        ) : (
+          <p>{bpm}</p>
+        )}
         {/* <button className="h-10 w-20 bg-blue-400" onClick={handleBpmbutton}>
           set
         </button> */}
@@ -184,7 +226,11 @@ export default function EditBeatMachine() {
                       className={`w-12 h-12 border-2 rounded-lg bg ${
                         beat == 1 ? "bg-blue-500" : "bg-red-300"
                       }`}
-                      onClick={() => toggleBeat(instrument, rowIndex, colIndex)}
+                      onClick={
+                        editable
+                          ? () => toggleBeat(instrument, rowIndex, colIndex)
+                          : () => {}
+                      }
                     ></button>
                   ))}
                 </div>
@@ -194,9 +240,11 @@ export default function EditBeatMachine() {
         </div>
       ))}
       <div className="flex flex-row justify-center gap-6">
-        <button className="text-white" onClick={handleSubmitBeat}>
-          Create beat
-        </button>
+        {editable ? (
+          <button className="text-white" onClick={handleSubmitBeat}>
+            Edit beat
+          </button>
+        ) : null}
         {/* new: Play Button */}
         <button className="text-white cursor-pointer" onClick={playBeat}>
           Play beat

@@ -91,8 +91,6 @@ export default function BeatMachine() {
     kick: new Audio("sounds/kick.wav"),
     snare: new Audio("sounds/snare.wav"),
     "high-hat": new Audio("sounds/CH.wav"),
-    "open-high-hat": new Audio("sounds/OH.wav"),
-    crash: new Audio("sounds/crash.wav"),
   };
 
   async function playInstrument(instrument, interval) {

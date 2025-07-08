@@ -39,6 +39,8 @@ export default function Beats() {
     getBeats();
   }, []);
 
+  console.log(allBeats);
+
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-6">
       <div className="max-w-5xl mx-auto">

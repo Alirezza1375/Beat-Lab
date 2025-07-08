@@ -12,6 +12,9 @@ import Blog from "./components/Pages/Blog.jsx";
 import About from "./components/Pages/About.jsx";
 import Contact from "./components/Pages/Contact.jsx";
 import Footer from "./components/Footer.jsx";
+import Pages from "./components/Pages/Pages.jsx";
+import Texts from "./components/Pages/Texts.jsx";
+import PageEdit from "./components/Pages/PageEdit.jsx";
 
 function App() {
   return (
@@ -32,6 +35,9 @@ function App() {
             <Route path="/beats" element={<Beats />} />
             <Route path="/beat/edit/:id" element={<EditBeatMachine />} />
             <Route path="/signup-form" element={<SignupForm />} />
+            <Route path="/pages" element={<Pages />} />
+            <Route path="/texts" element={<Texts />} />
+            <Route path="/page/edit/:id" element={<PageEdit />} />
           </Routes>
         </main>
 
