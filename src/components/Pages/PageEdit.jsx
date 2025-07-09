@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import EditBeatMachine from "../Beatmachine/EditBeatMachine";
 
 export default function PageEdit() {
   const [page, setPage] = useState("");
@@ -34,13 +35,19 @@ export default function PageEdit() {
   }
 
   async function getBlock(block) {
+    let content;
     if (block.block_type === "text") {
-      const textData = await getText(block.block_id);
-      return setPageBlocks((prevBlocks) => [...prevBlocks, textData]);
+      content = await getText(block.block_id);
     } else {
-      const beatData = await getBeat(block.block_id);
-      return setPageBlocks((prevBlocks) => [...prevBlocks, beatData]);
+      content = await getBeat(block.block_id);
     }
+
+    const blockWithMeta = {
+      ...content,
+      block_type: block.block_type,
+      position: block.position,
+    };
+    setPageBlocks((prev) => [...prev, blockWithMeta]);
   }
 
   // create a function to add obj to pageBlocks state
@@ -55,6 +62,10 @@ export default function PageEdit() {
     });
   }, []);
 
+  const sortedBlocks = [...blockWithMeta].sort(
+    (a, b) => a.position - b.position
+  );
+
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-6">
       <div className="max-w-5xl mx-auto">
@@ -62,6 +73,18 @@ export default function PageEdit() {
           <h1 className="text-3xl font-bold text-[#2a6496] mb-10">
             {page.title}
           </h1>
+        )}
+
+        {sortedBlocks.map((block, idx) =>
+          block.block_type === "text" ? (
+            <p key={idx} className="text-lg mb-6">
+              {block.content}
+            </p>
+          ) : (
+            <div>
+              <EditBeatMachine beat={block} editable={false} small={true} />
+            </div>
+          )
         )}
       </div>
     </div>

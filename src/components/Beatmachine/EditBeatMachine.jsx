@@ -1,7 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import ConfirmDialog from "../Dialog/ConfirmDialog";
 
-export default function EditBeatMachine({ beat, editable = true }) {
+export default function EditBeatMachine({
+  beat,
+  editable = true,
+  small = false,
+}) {
   const initialState = {
     kick: [
       [0, 0, 0, 0],
@@ -61,25 +66,28 @@ export default function EditBeatMachine({ beat, editable = true }) {
   };
 
   // handle edit beat
-  async function handleEditBeat() {
-    const beatToSend = {
+  async function handleUpdateBeat(beatId) {
+    const confirm = window.confirm("Are you sure you want to edit this beat?");
+    if (!confirm) return;
+    const updatedBeat = {
       beat_name: beatName,
       genre: genre,
       beat_schema: beats,
+      bpm: bpm,
       user_id: 1,
     };
 
-    const res = await fetch("http://127.0.0.1:5000/beats", {
-      method: "POST",
-      body: JSON.stringify(beatToSend),
+    const res = await fetch(`http://127.0.0.1:5000/beats/${beatId}`, {
+      method: "PUT",
+      body: JSON.stringify(updatedBeat),
       headers: {
         "Content-Type": "application/json",
       },
     });
     if (res.ok) {
-      alert("Beat created successfully");
+      alert("Beat updated successfully!");
     } else {
-      alert("Failed to creating beat!");
+      alert("Faild to updated beat! try again...");
     }
   }
 
@@ -107,12 +115,10 @@ export default function EditBeatMachine({ beat, editable = true }) {
 
   // new: Audio-data preparing
   const audioFiles = {
-    kick: new Audio("sounds/kick.wav"),
-    snare: new Audio("sounds/snare.wav"),
-    "high-hat": new Audio("sounds/CH.wav"),
+    kick: new Audio("/sounds/kick.wav"),
+    snare: new Audio("/sounds/snare.wav"),
+    "high-hat": new Audio("/sounds/CH.wav"),
   };
-
-  console.log("up until here, works!");
 
   async function playInstrument(instrument, interval) {
     const sound = audioFiles[instrument];
@@ -227,7 +233,7 @@ export default function EditBeatMachine({ beat, editable = true }) {
                       key={`${instrument}-${rowIndex}-${colIndex}`}
                       className={`w-12 h-12 border-2 rounded-lg bg ${
                         beat == 1 ? "bg-blue-500" : "bg-red-300"
-                      }`}
+                      } ${small ? "w-6 h-6" : "w-12 h-12"}`}
                       onClick={
                         editable
                           ? () => toggleBeat(instrument, rowIndex, colIndex)
@@ -245,7 +251,7 @@ export default function EditBeatMachine({ beat, editable = true }) {
         {editable ? (
           <button
             className="text-white cursor-pointer hover:font-bold"
-            onClick={handleEditBeat}
+            onClick={() => handleUpdateBeat(params.id)}
           >
             Edit beat
           </button>
@@ -258,7 +264,7 @@ export default function EditBeatMachine({ beat, editable = true }) {
           Play beat
         </button>
         <button
-          className="bg-red-400 text-white cursor-pointer hover:font-bold"
+          className=" text-white cursor-pointer hover:font-bold"
           onClick={handleStopBeat}
         >
           Stop

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Beats from "../Pages/Beats";
+import AlertDialog from "../Dialog/AlertDialog";
 
 export default function BeatMachine() {
   console.log("re-render");
@@ -45,6 +46,10 @@ export default function BeatMachine() {
   const [beatName, setBeatName] = useState("");
   const [genre, setGenre] = useState("rock");
   const [bpm, setBpm] = useState(120);
+  const [alertDialog, setAlertDialog] = useState({
+    openDialog: false,
+    response: "",
+  });
 
   useEffect(() => {
     beatsRef.current = beats;
@@ -59,6 +64,10 @@ export default function BeatMachine() {
 
       return { ...newBeats };
     });
+  };
+
+  const handleCloseDialog = () => {
+    setAlertDialog((prev) => ({ ...prev, openDialog: false, response: "" }));
   };
 
   async function handleSubmitBeat() {
@@ -80,10 +89,14 @@ export default function BeatMachine() {
       },
     });
     if (res.ok) {
-      alert("Beat created successfully");
+      setAlertDialog((prev) => ({ ...prev, openDialog: true, response: "ok" }));
       setBeats(initialState);
     } else {
-      alert("Faild to creating new beat!");
+      setAlertDialog((prev) => ({
+        ...prev,
+        openDialog: true,
+        response: "error",
+      }));
     }
   }
 
@@ -237,6 +250,14 @@ export default function BeatMachine() {
           All Beats
         </Link>
       </div>
+      <AlertDialog
+        open={alertDialog.openDialog}
+        handleClose={handleCloseDialog}
+      >
+        {alertDialog.response === "ok"
+          ? "Beat created successfully"
+          : "faild to create the beat!"}
+      </AlertDialog>
     </div>
   );
 }
