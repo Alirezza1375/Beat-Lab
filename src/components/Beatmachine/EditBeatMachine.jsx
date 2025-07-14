@@ -220,18 +220,18 @@ export default function EditBeatMachine({
         </button> */}
       </div>
       {Object.keys(beats).map((instrument) => (
-        <div key={instrument} className="space-y-2">
+        <div key={instrument} className={small ? "" : "space - y - 2"}>
           <h2 className="text-xl text-gray-300 font-bold capitalize">
             {instrument}
           </h2>
-          <div className="flex gap-8">
+          <div className={`flex ${small ? "gap-6" : "gap-8"}`}>
             {beats[instrument].map((row, rowIndex) => {
               return (
                 <div key={rowIndex} className="flex gap-2">
                   {row.map((beat, colIndex) => (
                     <button
                       key={`${instrument}-${rowIndex}-${colIndex}`}
-                      className={`w-12 h-12 border-2 rounded-lg bg ${
+                      className={` border-2 rounded-lg bg ${
                         beat == 1 ? "bg-blue-500" : "bg-red-300"
                       } ${small ? "w-6 h-6" : "w-12 h-12"}`}
                       onClick={

@@ -15,6 +15,8 @@ import Footer from "./components/Footer.jsx";
 import Pages from "./components/Pages/Pages.jsx";
 import Texts from "./components/Pages/Texts.jsx";
 import PageEdit from "./components/Pages/PageEdit.jsx";
+import CreateText from "./components/CreateText.jsx";
+import CreatePage from "./components/CreatePage.jsx";
 
 function App() {
   return (
@@ -38,6 +40,8 @@ function App() {
             <Route path="/pages" element={<Pages />} />
             <Route path="/texts" element={<Texts />} />
             <Route path="/page/edit/:id" element={<PageEdit />} />
+            <Route path="/create-text" element={<CreateText />} />
+            <Route path="/create-page" element={<CreatePage />} />
           </Routes>
         </main>
 

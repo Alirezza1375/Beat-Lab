@@ -42,11 +42,13 @@ export default function PageEdit() {
       content = await getBeat(block.block_id);
     }
 
+    // Save block info with position and type
     const blockWithMeta = {
       ...content,
       block_type: block.block_type,
       position: block.position,
     };
+
     setPageBlocks((prev) => [...prev, blockWithMeta]);
   }
 
@@ -62,9 +64,8 @@ export default function PageEdit() {
     });
   }, []);
 
-  const sortedBlocks = [...blockWithMeta].sort(
-    (a, b) => a.position - b.position
-  );
+  // Sort blocks by position before rendering
+  const sortedBlocks = [...pageBlocks].sort((a, b) => a.position - b.position);
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-6">
@@ -81,7 +82,7 @@ export default function PageEdit() {
               {block.content}
             </p>
           ) : (
-            <div>
+            <div key={idx} className="mb-8">
               <EditBeatMachine beat={block} editable={false} small={true} />
             </div>
           )
