@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import BeatMachine from "./Beatmachine/BeatMachine";
 
 function SignupForm() {
   const [name, setName] = useState("");
   const [familyName, setFamilyName] = useState("");
   const [email, setEmail] = useState("");
   const [level, setLevel] = useState("beginner");
+  const [password, setPassword] = useState("");
   const [res, setRes] = useState("");
 
   async function handleRegisterUser(e) {
@@ -16,6 +16,7 @@ function SignupForm() {
       family_name: familyName,
       email: email,
       level: level,
+      password: password, // include password
     };
 
     const fullName = `${name} ${familyName}`;
@@ -38,6 +39,7 @@ function SignupForm() {
       setFamilyName("");
       setEmail("");
       setLevel("beginner");
+      setPassword(""); // clear password field
     } catch (error) {
       console.error("Registration failed:", error);
       setRes(`error:${fullName}`);
@@ -87,9 +89,18 @@ function SignupForm() {
             <option value="advanced">Advanced</option>
           </select>
         </div>
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
         {res?.startsWith("success") && (
           <div>
-            <h5 className=" text-black p-2 rounded">
+            <h5 className="text-black p-2 rounded">
               {`${res.split(":")[1]} registered successfully.`}
             </h5>
             <span className="text-[12px]">Close this tab</span>
@@ -98,7 +109,7 @@ function SignupForm() {
         {res?.startsWith("error") && (
           <div>
             <h5 className="font-bold text-black p-2 rounded">
-              {`Faild to register ${res.split(":")[1]}.`}
+              {`Failed to register ${res.split(":")[1]}.`}
             </h5>
             <span className="text-[12px]">Try again!</span>
           </div>
