@@ -187,7 +187,7 @@ export default function EditBeatMachine({
             onChange={(e) => setBeatName(e.target.value)}
           />
         ) : (
-          <p>{beatName}</p>
+          <p className="text-white">{beatName}</p>
         )}
         {editable ? (
           <select
@@ -197,9 +197,11 @@ export default function EditBeatMachine({
           >
             <option value="rock">Rock</option>
             <option value="pop">pop</option>
+            <option value="funck">Funck</option>
+            <option value="hipHop">Hip-Hop</option>
           </select>
         ) : (
-          <p>{genre}</p>
+          <p className="text-white">{genre}</p>
         )}
         {editable ? (
           <input
@@ -213,7 +215,7 @@ export default function EditBeatMachine({
             onChange={handleBpmChange}
           />
         ) : (
-          <p>{bpm}</p>
+          <p className="text-white">{bpm}</p>
         )}
         {/* <button className="h-10 w-20 bg-blue-400" onClick={handleBpmbutton}>
           set

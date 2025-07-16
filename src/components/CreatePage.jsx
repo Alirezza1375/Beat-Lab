@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CreatePage() {
   const [title, setTitle] = useState("");
@@ -6,6 +7,7 @@ export default function CreatePage() {
   const [beats, setBeats] = useState([]);
   const [selectedTextId, setSelectedTextId] = useState("");
   const [selectedBeatId, setSelectedBeatId] = useState("");
+  const navigate = useNavigate(); // 👈 Initialize navigation
 
   useEffect(() => {
     async function fetchData() {
@@ -28,12 +30,10 @@ export default function CreatePage() {
     e.preventDefault();
 
     try {
-      // Create the page
       const pageRes = await fetch("http://127.0.0.1:5000/pages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({ title }),
       });
@@ -41,36 +41,35 @@ export default function CreatePage() {
       const newPageRes = await pageRes.json();
       const newPage = newPageRes.page;
 
-      // Create text block (position 1)
+      // Create text block
       await fetch("http://127.0.0.1:5000/page_blocks", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        "Access-Control-Allow-Origin": "*",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           block_type: "text",
           page_id: newPage.id,
-          id: selectedTextId,
+          block_id: selectedTextId,
           position: 1,
         }),
       });
 
-      // Create beat block (position 2)
-      await fetch("http://localhost:5000/page_blocks", {
+      // Create beat block
+      await fetch("http://127.0.0.1:5000/page_blocks", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        "Access-Control-Allow-Origin": "*",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           block_type: "beat",
           page_id: newPage.id,
-          id: selectedBeatId,
+          block_id: selectedBeatId,
           position: 2,
         }),
       });
 
-      alert("Page and page blocks created successfully!");
-      setTitle("");
-      setSelectedTextId("");
-      setSelectedBeatId("");
+      navigate(`/page/edit/${newPage.id}`);
     } catch (err) {
       console.error("Error creating page or page blocks:", err);
     }
