@@ -17,7 +17,6 @@ import Texts from "./components/Pages/Texts.jsx";
 import PageEdit from "./components/Pages/PageEdit.jsx";
 import CreateText from "./components/CreateText.jsx";
 import CreatePage from "./components/CreatePage.jsx";
-import BeatMachineViewer from "./components/Beatmachine/BeatMachineViewer.jsx";
 
 function App() {
   return (
@@ -39,6 +38,7 @@ function App() {
             <Route path="/beat/edit/:id" element={<EditBeatMachine />} />
             <Route path="/beat/view/:id" element={<BeatMachineViewer />} />
             <Route path="/signup-form" element={<SignupForm />} />
+            <Route path="/login" element={<LoginFrom />} />
             <Route path="/pages" element={<Pages />} />
             <Route path="/texts" element={<Texts />} />
             <Route path="/page/edit/:id" element={<PageEdit />} />

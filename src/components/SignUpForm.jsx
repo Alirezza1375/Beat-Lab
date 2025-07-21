@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
 function SignupForm() {
-  const [name, setName] = useState("");
-  const [familyName, setFamilyName] = useState("");
+  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [level, setLevel] = useState("beginner");
   const [password, setPassword] = useState("");
@@ -12,14 +11,15 @@ function SignupForm() {
     e.preventDefault();
 
     const userInfoToSend = {
-      name: name,
-      family_name: familyName,
+      username: username,
       email: email,
       level: level,
-      password: password, // include password
+      password: password,
     };
 
-    const fullName = `${name} ${familyName}`;
+    console.log(userInfoToSend, "userInfo");
+
+    const userName = `${username}`;
     try {
       const response = await fetch("http://127.0.0.1:5000/register", {
         method: "POST",
@@ -30,19 +30,18 @@ function SignupForm() {
       });
 
       if (response.ok) {
-        setRes(`success:${fullName}`);
+        setRes(`success:${userName}`);
       } else {
-        setRes(`error:${fullName}`);
+        setRes(`error:${userName}`);
       }
 
-      setName("");
-      setFamilyName("");
+      setUserName("");
       setEmail("");
       setLevel("beginner");
-      setPassword(""); // clear password field
+      setPassword("");
     } catch (error) {
       console.error("Registration failed:", error);
-      setRes(`error:${fullName}`);
+      setRes(`error:${userName}`);
     }
   }
 
@@ -51,23 +50,15 @@ function SignupForm() {
       <h2 className="mb-2.5">Sign Up</h2>
       <form onSubmit={handleRegisterUser}>
         <div>
-          <label>Name:</label>
+          <label>Userame:</label>
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={username}
+            onChange={(e) => setUserName(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label>Family Name:</label>
-          <input
-            type="text"
-            value={familyName}
-            onChange={(e) => setFamilyName(e.target.value)}
-            required
-          />
-        </div>
+
         <div>
           <label>Email:</label>
           <input
