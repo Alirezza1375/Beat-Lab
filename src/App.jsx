@@ -19,6 +19,7 @@ import CreateText from "./components/CreateText.jsx";
 import CreatePage from "./components/CreatePage.jsx";
 import LoginForm from "./components/LogInForm.jsx";
 import BeatMachineViewer from "./components/Beatmachine/BeatMachineViewer.jsx";
+import Protected from "./components/Protected.jsx";
 
 function App() {
   return (
@@ -35,17 +36,22 @@ function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/create-beat" element={<BeatMachine />} />
-            <Route path="/beats" element={<Beats />} />
-            <Route path="/beat/edit/:id" element={<EditBeatMachine />} />
-            <Route path="/beat/view/:id" element={<BeatMachineViewer />} />
-            <Route path="/signup-form" element={<SignupForm />} />
+
             <Route path="/login" element={<LoginForm />} />
-            <Route path="/pages" element={<Pages />} />
-            <Route path="/texts" element={<Texts />} />
-            <Route path="/page/edit/:id" element={<PageEdit />} />
-            <Route path="/create-text" element={<CreateText />} />
-            <Route path="/create-page" element={<CreatePage />} />
+            <Route path="/signup-form" element={<SignupForm />} />
+
+            {/* Protected routes */}
+            <Route element={<Protected />}>
+              <Route path="/create-beat" element={<BeatMachine />} />
+              <Route path="/beats" element={<Beats />} />
+              <Route path="/beat/edit/:id" element={<EditBeatMachine />} />
+              <Route path="/beat/view/:id" element={<BeatMachineViewer />} />
+              <Route path="/pages" element={<Pages />} />
+              <Route path="/texts" element={<Texts />} />
+              <Route path="/page/edit/:id" element={<PageEdit />} />
+              <Route path="/create-text" element={<CreateText />} />
+              <Route path="/create-page" element={<CreatePage />} />
+            </Route>
           </Routes>
         </main>
 

@@ -1,31 +1,42 @@
 import React, { useState } from "react";
+import { useAuthContext } from "../context/AuthContextProvider";
+import { useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  async function handleLogin() {
-    console.log("working...");
+  const { setToken, setUser } = useAuthContext();
+
+  async function handleLogin(e) {
+    e.preventDefault();
+
+    const payload = {
+      identifier,
+      password,
+    };
+
+    console.log(payload);
 
     const response = await fetch("http://127.0.0.1:5000/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        identifier,
-        password,
-      }),
+      body: JSON.stringify(payload),
     });
 
     const data = await response.json();
 
     if (response.ok) {
       localStorage.setItem("token", data.token);
+      localStorage.setItem("user", data.user);
+      setToken(data.token);
+      setUser(data.user);
       console.log("Login successful", data);
+      navigate("/create-beat");
     } else {
       console.error("Login failed", data.message);
     }
-
-    console.log(identifier, "identifier");
   }
 
   return (

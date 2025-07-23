@@ -91,6 +91,7 @@ export default function BeatMachine() {
     if (res.ok) {
       setAlertDialog((prev) => ({ ...prev, openDialog: true, response: "ok" }));
       setBeats(initialState);
+      console.log("beat created successfuly!");
     } else {
       setAlertDialog((prev) => ({
         ...prev,

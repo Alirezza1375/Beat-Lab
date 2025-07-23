@@ -1,6 +1,16 @@
 import React from "react";
+import { useAuthContext } from "../context/AuthContextProvider";
 
 function Navbar() {
+  const { user, token, setUser, setToken } = useAuthContext();
+
+  function logOut() {
+    setToken(undefined);
+    setUser(undefined);
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+  }
+
   return (
     <nav className="navbar">
       <div className="navbar-logo">
@@ -50,25 +60,29 @@ function Navbar() {
           </a>
         </li>
       </ul>
-      <div className="navbar-auth">
-        <a
-          href="/login"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="auth-link"
-        >
-          Login
-        </a>
-        <span className="auth-separator">/</span>
-        <a
-          href="/signup-form"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="nav-link"
-        >
-          Sign Up
-        </a>
-      </div>
+      {token && user ? (
+        <button onClick={logOut}>Log out</button>
+      ) : (
+        <div className="navbar-auth">
+          <a
+            href="/login"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="auth-link"
+          >
+            Login
+          </a>
+          <span className="auth-separator">/</span>
+          <a
+            href="/signup-form"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-link"
+          >
+            Sign Up
+          </a>
+        </div>
+      )}
     </nav>
   );
 }
