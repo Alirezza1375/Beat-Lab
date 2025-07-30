@@ -61,7 +61,7 @@ function Navbar() {
         </li>
       </ul>
       {token && user ? (
-        <button onClick={logOut}>Log out</button>
+        ""
       ) : (
         <div className="navbar-auth">
           <a

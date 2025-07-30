@@ -177,7 +177,7 @@ export default function BeatMachine() {
         <select
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
-          className="text-white"
+          className="placeholder-white"
         >
           <option value="rock">Rock</option>
           <option value="pop">Pop</option>
@@ -190,7 +190,7 @@ export default function BeatMachine() {
           min={40}
           name="bpmSelector"
           placeholder="select bpm..."
-          className="placeholder-white text-white"
+          className="placeholder-white"
           value={bpm}
           onChange={handleBpmChange}
         />

@@ -33,7 +33,7 @@ function LoginForm() {
       setToken(data.token);
       setUser(data.user);
       console.log("Login successful", data);
-      navigate("/create-beat");
+      navigate("/admin-dashboard");
     } else {
       console.error("Login failed", data.message);
     }
