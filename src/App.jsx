@@ -17,8 +17,7 @@ import Texts from "./components/Pages/Texts.jsx";
 import PageEdit from "./components/Pages/PageEdit.jsx";
 import CreateText from "./components/CreateText.jsx";
 import CreatePage from "./components/CreatePage.jsx";
-import LoginForm from "./components/LogInForm.jsx";
-import BeatMachineViewer from "./components/Beatmachine/BeatMachineViewer.jsx";
+import LoginForm from "./components/LoginForm.jsx";
 import Protected from "./components/Protected.jsx";
 import AdminDashboard from "./components/Pages/AdminDashboard.jsx";
 
@@ -45,7 +44,6 @@ function App() {
               {/* Protected routes */}
               <Route element={<Protected />}>
                 <Route path="/beat/edit/:id" element={<EditBeatMachine />} />
-                <Route path="/beat/view/:id" element={<BeatMachineViewer />} />
                 <Route path="/page/edit/:id" element={<PageEdit />} />
               </Route>
             </Routes>
