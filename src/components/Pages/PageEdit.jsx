@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import EditBeatMachine from "../Beatmachine/EditBeatMachine";
+import { useAuthContext } from "../../context/AuthContextProvider";
 
 export default function PageEdit() {
   const [page, setPage] = useState("");
   const [pageBlocks, setPageBlocks] = useState([]);
+  const { token } = useAuthContext();
 
   const params = useParams();
 
   // create a function to get the page info
   async function getPageInfo() {
     try {
-      const res = await fetch(`http://127.0.0.1:5000/pages/${params.id}`);
+      const res = await fetch(
+        `https://beatlab-backend.onrender.com/pages/${params.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = await res.json();
       setPage(data);
       return data;
@@ -22,14 +31,28 @@ export default function PageEdit() {
 
   // create a function getText(id)
   async function getText(id) {
-    const res = await fetch(`http://127.0.0.1:5000/texts/${id}`);
+    const res = await fetch(
+      `https://beatlab-backend.onrender.com/texts/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     if (!res.ok) throw new Error("Failed to fetch text block");
     return await res.json();
   }
 
   // create a function getBeat(id)
   async function getBeat(id) {
-    const res = await fetch(`http://127.0.0.1:5000/beats/${id}`);
+    const res = await fetch(
+      `https://beatlab-backend.onrender.com/beats/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     if (!res.ok) throw new Error("Failed to fetch beat block");
     return await res.json();
   }

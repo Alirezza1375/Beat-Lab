@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuthContext } from "../../context/AuthContextProvider";
 
 export default function Pages() {
   const [allPages, setAllPages] = useState([]);
+  const { user, token } = useAuthContext();
 
   async function getPages() {
     try {
-      const res = await fetch("http://127.0.0.1:5000/pages");
+      const res = await fetch("https://beatlab-backend.onrender.com/pages", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       setAllPages([...data]);
     } catch (err) {
@@ -20,9 +26,12 @@ export default function Pages() {
     );
     if (!confirm) return;
     try {
-      const res = await fetch(`http://127.0.0.1:5000/pages/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `https://beatlab-backend.onrender.com/pages/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         setAllPages((prev) => prev.filter((page) => page.id !== id));

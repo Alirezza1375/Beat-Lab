@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuthContext } from "../../context/AuthContextProvider";
 
 export default function Texts() {
   const [allTexts, setAllTexts] = useState([]);
+  const { token } = useAuthContext();
 
   async function getTexts() {
     try {
-      const res = await fetch("http://127.0.0.1:5000/texts");
+      const res = await fetch("https://beatlab-backend.onrender.com/texts", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       setAllTexts([...data]);
     } catch (err) {
@@ -20,9 +26,12 @@ export default function Texts() {
     );
     if (!confirm) return;
     try {
-      const res = await fetch(`http://127.0.0.1:5000/texts/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `https://beatlab-backend.onrender.com/texts/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         setAllTexts((prev) => prev.filter((text) => text.id !== id));

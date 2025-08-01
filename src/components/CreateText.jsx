@@ -1,21 +1,25 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContextProvider";
 
 export default function CreateText() {
   const [text, setText] = useState("");
+  const { user, token } = useAuthContext();
 
   async function handleSubmitText() {
     const textToSend = {
       content: text,
+      user_id: user.id,
     };
 
     console.log("submitting text JSON:", textToSend);
 
-    const res = await fetch("http://127.0.0.1:5000/texts", {
+    const res = await fetch("https://beatlab-backend.onrender.com/texts", {
       method: "POST",
       body: JSON.stringify(textToSend),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
     if (res.ok) {
@@ -34,7 +38,7 @@ export default function CreateText() {
         onChange={(e) => setText(e.target.value)}
       />
       <button
-        className="block cursor-pointer hover:font-bold"
+        className="cursor-pointer hover:font-bold bg-[#2a6496] text-white px-4 py-2 rounded hover:bg-blue-700 w-[127px] h-[40px] mt-1"
         onClick={handleSubmitText}
       >
         Create text

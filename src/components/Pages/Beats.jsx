@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuthContext } from "../../context/AuthContextProvider";
 
 export default function Beats() {
   const [allBeats, setAllBeats] = useState([]);
+  const { user, token } = useAuthContext();
 
   async function getBeats() {
     try {
-      const res = await fetch("http://127.0.0.1:5000/beats");
+      const res = await fetch("https://beatlab-backend.onrender.com/beats", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       const data = await res.json();
-      setAllBeats([...data]);
+
+      setAllBeats(data);
     } catch (err) {
       console.error("Failed to fetch the data!", err);
     }
@@ -20,9 +28,12 @@ export default function Beats() {
     );
     if (!confirm) return;
     try {
-      const res = await fetch(`http://127.0.0.1:5000/beats/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `https://beatlab-backend.onrender.com/beats/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         setAllBeats((prev) => prev.filter((beat) => beat.id !== id));
@@ -46,7 +57,9 @@ export default function Beats() {
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold text-[#2a6496] mb-5">Your Beats</h1>
         <p className="mb-[20px] text-[#2a6496]">
-          Edit your beats by clicking on them!
+          {!allBeats
+            ? "You haven't created any beat yet"
+            : "Edit your beats by clicking on them!"}
         </p>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {allBeats.map((item) => (

@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ConfirmDialog from "../Dialog/ConfirmDialog";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../context/AuthContextProvider";
 
 export default function EditBeatMachine({
   beat,
@@ -49,6 +51,8 @@ export default function EditBeatMachine({
   const [beatName, setBeatName] = useState(beat ? beat.beat_name : "");
   const [genre, setGenre] = useState(beat ? beat.genre : "Rock");
   const [bpm, setBpm] = useState(beat ? beat.bpm : 120);
+  const { user, token } = useAuthContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     beatsRef.current = beats;
@@ -77,22 +81,34 @@ export default function EditBeatMachine({
       user_id: 1,
     };
 
-    const res = await fetch(`http://127.0.0.1:5000/beats/${beatId}`, {
-      method: "PUT",
-      body: JSON.stringify(updatedBeat),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const res = await fetch(
+      `https://beatlab-backend.onrender.com/beats/${beatId}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(updatedBeat),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     if (res.ok) {
       alert("Beat updated successfully!");
+      navigate("/admin-dashboard");
     } else {
       alert("Faild to updated beat! try again...");
     }
   }
 
   async function getSingleBeat(id) {
-    const res = await fetch(`http://127.0.0.1:5000/beats/${id}`);
+    const res = await fetch(
+      `https://beatlab-backend.onrender.com/beats/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     const data = await res.json();
     setBeatName(data.beat_name);
     setBeats((prevSchema) => {
@@ -177,64 +193,61 @@ export default function EditBeatMachine({
   };
 
   return (
-    <div className="bg-[#242424] border border-red-500 p-4 space-y-4">
-      <div className="flex flex-row justify-around">
-        {editable ? (
-          <input
-            placeholder="Beat Name"
-            className="text-white placeholder-white"
-            value={beatName}
-            onChange={(e) => setBeatName(e.target.value)}
-          />
-        ) : (
-          <p className="text-white">{beatName}</p>
-        )}
-        {editable ? (
-          <select
-            value={genre}
-            onChange={(e) => setGenre(e.target.value)}
-            className="text-white"
-          >
-            <option value="rock">Rock</option>
-            <option value="pop">pop</option>
-            <option value="funck">Funck</option>
-            <option value="hipHop">Hip-Hop</option>
-          </select>
-        ) : (
-          <p className="text-white">{genre}</p>
-        )}
-        {editable ? (
-          <input
-            type="number"
-            max={240}
-            min={40}
-            name="bpmSelector"
-            placeholder="select bpm..."
-            className="placeholder-white text-white"
-            value={bpm}
-            onChange={handleBpmChange}
-          />
-        ) : (
-          <p className="text-white">{bpm}</p>
-        )}
-        {/* <button className="h-10 w-20 bg-blue-400" onClick={handleBpmbutton}>
-          set
-        </button> */}
-      </div>
-      {Object.keys(beats).map((instrument) => (
-        <div key={instrument} className={small ? "" : "space - y - 2"}>
-          <h2 className="text-xl text-gray-300 font-bold capitalize">
-            {instrument}
-          </h2>
-          <div className={`flex ${small ? "gap-6" : "gap-8"}`}>
-            {beats[instrument].map((row, rowIndex) => {
-              return (
+    <div className="flex justify-center w-full">
+      <div className="bg-white border border-gray-300 p-4 space-y-4">
+        <div className="flex flex-row justify-around">
+          {editable ? (
+            <input
+              placeholder="Beat Name"
+              className="bg-white text-black border border-gray-300 rounded px-2"
+              value={beatName}
+              onChange={(e) => setBeatName(e.target.value)}
+            />
+          ) : (
+            <p className="text-black">{beatName}</p>
+          )}
+          {editable ? (
+            <select
+              value={genre}
+              onChange={(e) => setGenre(e.target.value)}
+              className="bg-white text-black border border-gray-300 rounded px-2"
+            >
+              <option value="rock">Rock</option>
+              <option value="pop">Pop</option>
+              <option value="funck">Funk</option>
+              <option value="hipHop">Hip-Hop</option>
+            </select>
+          ) : (
+            <p className="text-black">{genre}</p>
+          )}
+          {editable ? (
+            <input
+              type="number"
+              max={240}
+              min={40}
+              name="bpmSelector"
+              placeholder="select bpm..."
+              className="bg-white text-black border border-gray-300 rounded px-2"
+              value={bpm}
+              onChange={handleBpmChange}
+            />
+          ) : (
+            <p className="text-black">{bpm}</p>
+          )}
+        </div>
+        {Object.keys(beats).map((instrument) => (
+          <div key={instrument} className="space-y-2 w-full overflow-x-auto">
+            <h2 className="text-xl text-[#2a6496] font-bold capitalize">
+              {instrument}
+            </h2>
+            <div className="flex gap-8 w-fit">
+              {beats[instrument].map((row, rowIndex) => (
                 <div key={rowIndex} className="flex gap-2">
                   {row.map((beat, colIndex) => (
                     <button
                       key={`${instrument}-${rowIndex}-${colIndex}`}
-                      className={` border-2 rounded-lg bg ${
-                        beat == 1 ? "bg-blue-500" : "bg-red-300"
+                      className={`border-2 rounded-lg ${
+                        beat == 1 ? "bg-[#2a6496] text-white" : "bg-gray-200"
                       } ${small ? "w-6 h-6" : "w-12 h-12"}`}
                       onClick={
                         editable
@@ -244,33 +257,32 @@ export default function EditBeatMachine({
                     ></button>
                   ))}
                 </div>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
-      <div className="flex flex-row justify-center gap-6">
-        {editable ? (
+        ))}
+        <div className="flex flex-row justify-center gap-6">
+          {editable ? (
+            <button
+              className="text-[#2a6496] cursor-pointer hover:font-bold"
+              onClick={() => handleUpdateBeat(params.id)}
+            >
+              Edit beat
+            </button>
+          ) : null}
           <button
-            className="text-white cursor-pointer hover:font-bold"
-            onClick={() => handleUpdateBeat(params.id)}
+            className="text-[#2a6496] cursor-pointer hover:font-bold"
+            onClick={playBeat}
           >
-            Edit beat
+            Play beat
           </button>
-        ) : null}
-        {/* new: Play Button */}
-        <button
-          className="text-white cursor-pointer hover:font-bold"
-          onClick={playBeat}
-        >
-          Play beat
-        </button>
-        <button
-          className=" text-white cursor-pointer hover:font-bold"
-          onClick={handleStopBeat}
-        >
-          Stop
-        </button>
+          <button
+            className="text-[#2a6496] cursor-pointer hover:font-bold"
+            onClick={handleStopBeat}
+          >
+            Stop
+          </button>
+        </div>
       </div>
     </div>
   );

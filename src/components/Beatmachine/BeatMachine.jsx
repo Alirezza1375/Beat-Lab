@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import Beats from "../Pages/Beats";
 import AlertDialog from "../Dialog/AlertDialog";
+import { useAuthContext } from "../../context/AuthContextProvider";
 
 export default function BeatMachine() {
   console.log("re-render");
@@ -51,6 +51,8 @@ export default function BeatMachine() {
     response: "",
   });
 
+  const { user, token } = useAuthContext();
+
   useEffect(() => {
     beatsRef.current = beats;
   }, [beats]);
@@ -76,16 +78,17 @@ export default function BeatMachine() {
       genre: genre,
       beat_schema: beats,
       bpm: bpm,
-      user_id: 1,
+      user_id: user.id,
     };
 
     console.log("submitting beat JSON:", beatToSend);
 
-    const res = await fetch("http://127.0.0.1:5000/beats", {
+    const res = await fetch("https://beatlab-backend.onrender.com/beats", {
       method: "POST",
       body: JSON.stringify(beatToSend),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
     if (res.ok) {
@@ -103,9 +106,9 @@ export default function BeatMachine() {
 
   // audio-data preparing
   const audioFiles = {
-    kick: new Audio("sounds/kick.wav"),
-    snare: new Audio("sounds/snare.wav"),
-    "high-hat": new Audio("sounds/CH.wav"),
+    kick: new Audio("/sounds/kick.wav"),
+    snare: new Audio("/sounds/snare.wav"),
+    "high-hat": new Audio("/sounds/CH.wav"),
   };
 
   async function playInstrument(instrument, interval) {
@@ -166,18 +169,18 @@ export default function BeatMachine() {
   };
 
   return (
-    <div className="bg-[#242424] border border-red-500 p-4 space-y-4 w-[1000px]">
+    <div className="bg-white border border-gray-300 p-4 space-y-4 w-[1000px]">
       <div className="flex flex-row justify-around">
         <input
           placeholder="Beat Name"
-          className="text-white placeholder-white"
+          className="bg-white text-black border border-gray-300 rounded px-2 placeholder-gray-500"
           value={beatName}
           onChange={(e) => setBeatName(e.target.value)}
         />
         <select
           value={genre}
           onChange={(e) => setGenre(e.target.value)}
-          className="placeholder-white"
+          className="bg-white text-black border border-gray-300 rounded px-2"
         >
           <option value="rock">Rock</option>
           <option value="pop">Pop</option>
@@ -190,17 +193,14 @@ export default function BeatMachine() {
           min={40}
           name="bpmSelector"
           placeholder="select bpm..."
-          className="placeholder-white"
+          className="bg-white text-black border border-gray-300 rounded px-2"
           value={bpm}
           onChange={handleBpmChange}
         />
-        {/* <button className="h-10 w-20 bg-blue-400" onClick={handleBpmbutton}>
-          set
-        </button> */}
       </div>
       {Object.keys(beats).map((instrument) => (
         <div key={instrument} className="space-y-2 w-full overflow-scroll">
-          <h2 className="text-xl text-gray-300 font-bold capitalize">
+          <h2 className="text-xl text-[#2a6496] font-bold capitalize">
             {instrument}
           </h2>
           <div className="flex gap-8 w-full">
@@ -212,8 +212,8 @@ export default function BeatMachine() {
                       key={`${instrument}-${rowIndex}-${colIndex}`}
                       className={`cell-${
                         rowIndex * 4 + colIndex
-                      } cell w-12 h-12 border-2 rounded-lg bg ${
-                        beat == 1 ? "bg-blue-500" : "bg-red-300"
+                      } cell w-12 h-12 border-2 rounded-lg ${
+                        beat == 1 ? "bg-[#2a6496] text-white" : "bg-gray-200"
                       }`}
                       onClick={() => toggleBeat(instrument, rowIndex, colIndex)}
                     ></button>
@@ -226,26 +226,25 @@ export default function BeatMachine() {
       ))}
       <div className="flex flex-row justify-center gap-6">
         <button
-          className="text-white cursor-pointer hover:font-bold"
+          className="text-[#2a6496] font-semibold cursor-pointer hover:underline"
           onClick={handleSubmitBeat}
         >
           Create beat
         </button>
-        {/* new: Play Button */}
         <button
-          className="text-white cursor-pointer hover:font-bold"
+          className="text-[#2a6496] font-semibold cursor-pointer hover:underline"
           onClick={playBeat}
         >
           Play beat
         </button>
         <button
-          className="text-white cursor-pointer hover:font-bold"
+          className="text-[#2a6496] font-semibold cursor-pointer hover:underline"
           onClick={handleStopBeat}
         >
           Stop
         </button>
         <Link
-          className="text-white hover:font-bold cursor-pointer"
+          className="text-[#2a6496] font-semibold hover:underline cursor-pointer"
           to={"/beats"}
         >
           All Beats

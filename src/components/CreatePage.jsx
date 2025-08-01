@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContextProvider";
 
 export default function CreatePage() {
   const [title, setTitle] = useState("");
@@ -7,13 +8,27 @@ export default function CreatePage() {
   const [beats, setBeats] = useState([]);
   const [selectedTextId, setSelectedTextId] = useState("");
   const [selectedBeatId, setSelectedBeatId] = useState("");
-  const navigate = useNavigate(); // 👈 Initialize navigation
-
+  const navigate = useNavigate();
+  const { user, token } = useAuthContext();
   useEffect(() => {
     async function fetchData() {
       try {
-        const textsRes = await fetch("http://127.0.0.1:5000/texts");
-        const beatsRes = await fetch("http://127.0.0.1:5000/beats");
+        const textsRes = await fetch(
+          "https://beatlab-backend.onrender.com/texts",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const beatsRes = await fetch(
+          "https://beatlab-backend.onrender.com/beats",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const textsData = await textsRes.json();
         const beatsData = await beatsRes.json();
         setTexts(textsData);
@@ -30,22 +45,27 @@ export default function CreatePage() {
     e.preventDefault();
 
     try {
-      const pageRes = await fetch("http://127.0.0.1:5000/pages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ title }),
-      });
+      const pageRes = await fetch(
+        "https://beatlab-backend.onrender.com/pages",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ title, user_id: user.id }),
+        }
+      );
 
       const newPageRes = await pageRes.json();
       const newPage = newPageRes.page;
 
       // Create text block
-      await fetch("http://127.0.0.1:5000/page_blocks", {
+      await fetch("https://beatlab-backend.onrender.com/page_blocks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           block_type: "text",
@@ -56,10 +76,11 @@ export default function CreatePage() {
       });
 
       // Create beat block
-      await fetch("http://127.0.0.1:5000/page_blocks", {
+      await fetch("https://beatlab-backend.onrender.com/page_blocks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           block_type: "beat",
@@ -81,7 +102,7 @@ export default function CreatePage() {
         <label className="block font-semibold">Page Title</label>
         <input
           type="text"
-          className="border px-2 py-1 w-full"
+          className="border rounded-full px-2 py-1 w-full"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
@@ -94,7 +115,7 @@ export default function CreatePage() {
           value={selectedTextId}
           onChange={(e) => setSelectedTextId(e.target.value)}
           required
-          className="border px-2 py-1 w-full"
+          className="border rounded-full px-2 py-1 w-full"
         >
           <option value="">-- Choose a text --</option>
           {texts.map((text) => (
@@ -111,7 +132,7 @@ export default function CreatePage() {
           value={selectedBeatId}
           onChange={(e) => setSelectedBeatId(e.target.value)}
           required
-          className="border px-2 py-1 w-full"
+          className="border rounded-full px-2 py-1 w-full"
         >
           <option value="">-- Choose a beat --</option>
           {beats.map((beat) => (
@@ -124,7 +145,7 @@ export default function CreatePage() {
 
       <button
         type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="bg-[#2a6496] text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer"
       >
         Create Page
       </button>

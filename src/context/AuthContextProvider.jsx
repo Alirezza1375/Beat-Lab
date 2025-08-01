@@ -5,7 +5,7 @@ const AuthContext = createContext();
 
 function AuthContextProvider({ children }) {
   const storageToken = localStorage.getItem("token");
-  const storageUser = localStorage.getItem("user");
+  const storageUser = JSON.parse(localStorage.getItem("user"));
   const [token, setToken] = useState(storageToken ? storageToken : undefined);
   const [user, setUser] = useState(storageUser ? storageUser : undefined);
 

@@ -21,13 +21,16 @@ function SignupForm() {
 
     const userName = `${username}`;
     try {
-      const response = await fetch("http://127.0.0.1:5000/register", {
-        method: "POST",
-        body: JSON.stringify(userInfoToSend),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "https://beatlab-backend.onrender.com/register",
+        {
+          method: "POST",
+          body: JSON.stringify(userInfoToSend),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (response.ok) {
         setRes(`success:${userName}`);

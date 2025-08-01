@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 function LoginForm() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [res, setRes] = useState("");
   const navigate = useNavigate();
 
   const { setToken, setUser } = useAuthContext();
@@ -17,9 +18,7 @@ function LoginForm() {
       password,
     };
 
-    console.log(payload);
-
-    const response = await fetch("http://127.0.0.1:5000/login", {
+    const response = await fetch("https://beatlab-backend.onrender.com/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -29,13 +28,14 @@ function LoginForm() {
 
     if (response.ok) {
       localStorage.setItem("token", data.token);
-      localStorage.setItem("user", data.user);
+      localStorage.setItem("user", JSON.stringify(data.user));
       setToken(data.token);
       setUser(data.user);
       console.log("Login successful", data);
       navigate("/admin-dashboard");
     } else {
       console.error("Login failed", data.message);
+      setRes("error");
     }
   }
 
@@ -62,6 +62,17 @@ function LoginForm() {
             required
           />
         </div>
+
+        {res?.startsWith("error") && (
+          <div>
+            <h5 className="font-bold text-black p-2 rounded">
+              Failed to login!
+            </h5>
+            <span className="text-[12px]">
+              Try to use correct username and password!
+            </span>
+          </div>
+        )}
 
         <button type="submit">Login</button>
       </form>
